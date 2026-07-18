@@ -15,8 +15,8 @@ export const BUSINESS = {
   websiteUrl: 'https://www.biodiagnossis.com',
   logoUrl: '/logo-biodiagnossis.png',
   social: {
-    instagram: '',
-    facebook: '',
+    instagram: 'https://www.instagram.com/biodiagnossis?igsh=ZWkwd2VrejM4NzB4',
+    facebook: 'https://www.facebook.com/share/192TgigmGL/',
   },
   hours: [
     { days: 'Lunes a viernes', value: '07:30–16:30' },
@@ -132,7 +132,7 @@ export const FAQS = [
   {
     question: '¿La atención a domicilio queda confirmada al enviar la solicitud?',
     answer:
-      'No. La solicitud queda pendiente de revisión. El equipo confirma por WhatsApp la cobertura, fecha, horario y demás condiciones.',
+      'No. Al enviarla coordinaremos por WhatsApp la cobertura, fecha, horario y demás condiciones.',
   },
   {
     question: '¿Puedo consultar precios por WhatsApp?',

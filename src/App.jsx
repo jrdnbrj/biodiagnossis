@@ -73,6 +73,33 @@ function WhatsAppLink({
   );
 }
 
+function SocialLink({ href, label, description, icon: Icon }) {
+  if (!href) return null;
+
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={`${label} de BioDiagnossis`}
+      className="group flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.06] p-3 transition hover:-translate-y-0.5 hover:border-emerald-300/50 hover:bg-white/10 focus:outline-none focus:ring-4 focus:ring-emerald-300/30"
+    >
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-300 to-cyan-300 text-blue-950 shadow-lg shadow-emerald-300/10">
+        <Icon aria-hidden="true" size={20} />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-sm font-black text-white">{label}</span>
+        <span className="block text-xs text-slate-300">{description}</span>
+      </span>
+      <ArrowRight
+        aria-hidden="true"
+        size={17}
+        className="shrink-0 text-emerald-300 transition group-hover:translate-x-0.5"
+      />
+    </a>
+  );
+}
+
 function SectionHeading({ eyebrow, title, description, align = "center" }) {
   return (
     <div
@@ -122,8 +149,13 @@ function ServiceCard({ service, selected, onToggle }) {
           {service.category}
         </span>
         {hasPrice && (
-          <span className="whitespace-nowrap text-lg font-black text-slate-900">
-            ${service.price.toFixed(2)}
+          <span className="text-right">
+            <span className="block whitespace-nowrap text-lg font-black text-slate-900">
+              ${service.price.toFixed(2)}
+            </span>
+            <span className="block text-[0.65rem] font-bold uppercase tracking-wide text-slate-500">
+              Estimado
+            </span>
           </span>
         )}
       </div>
@@ -537,9 +569,9 @@ Entiendo que la visita queda pendiente de confirmación.`;
               </h1>
 
               <p className="mt-6 max-w-2xl text-pretty text-lg leading-8 text-blue-100 sm:text-xl">
-                Consulte disponibilidad, preparación, precios configurados y
-                atención a domicilio. Nuestro equipo revisa cada solicitud
-                antes de confirmarla.
+                Consulte disponibilidad, preparación, precios estimados y
+                atención a domicilio. Escríbanos por WhatsApp y con gusto le
+                ayudaremos a coordinar lo que necesite.
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -629,13 +661,13 @@ Entiendo que la visita queda pendiente de confirmación.`;
             />
             <TrustItem
               icon={ShieldCheck}
-              title="Sin promesas automáticas"
-              description="Las solicitudes sensibles, domicilios y disponibilidades pasan por revisión humana."
+              title="Atención coordinada con usted"
+              description="Escríbanos para consultar disponibilidad, coordinar una visita o solicitar atención a domicilio."
             />
             <TrustItem
               icon={Accessibility}
-              title="Información fácil de entender"
-              description="Diseño legible, botones grandes y pasos breves para facilitar el uso desde el celular."
+              title="Todo lo que necesita, en un solo lugar"
+              description="Encuentre exámenes, horarios, ubicación y opciones de atención antes de su visita."
             />
           </div>
         </section>
@@ -645,7 +677,7 @@ Entiendo que la visita queda pendiente de confirmación.`;
             <SectionHeading
               eyebrow="Exámenes y servicios"
               title="Encuentre el examen que necesita"
-              description="Los precios se muestran únicamente cuando están configurados. Confirme preparación, disponibilidad y valor final antes de acudir."
+              description="Los precios publicados son estimaciones. Para recibir una cotización final, confirmar preparación y disponibilidad, escríbanos por WhatsApp."
             />
 
             <div className="mb-8 grid gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-[1fr_auto]">
@@ -735,8 +767,8 @@ Entiendo que la visita queda pendiente de confirmación.`;
                       {selectedServiceObjects.length === 1 ? "" : "s"}
                     </p>
                     <p className="text-sm text-slate-600">
-                      Suma referencial configurada: ${estimatedTotal.toFixed(2)}.
-                      Falta confirmar condiciones y modalidad.
+                      Estimación de servicios: ${estimatedTotal.toFixed(2)}.
+                      Escríbanos por WhatsApp para recibir una cotización final.
                     </p>
                   </div>
                   <div className="flex w-full gap-2 sm:w-auto">
@@ -751,7 +783,7 @@ Entiendo que la visita queda pendiente de confirmación.`;
                       message={selectedWhatsAppMessage}
                       className="flex-1 bg-emerald-600 text-white hover:bg-emerald-700 sm:flex-none"
                     >
-                      Confirmar por WhatsApp
+                      Solicitar cotización por WhatsApp
                     </WhatsAppLink>
                   </div>
                 </div>
@@ -766,8 +798,8 @@ Entiendo que la visita queda pendiente de confirmación.`;
               <div className="lg:sticky lg:top-32">
                 <SectionHeading
                   eyebrow="Atención a domicilio"
-                  title="Solicite revisión para una toma de muestras en casa"
-                  description="Comparta los datos iniciales. El equipo verificará cobertura, fecha, horario, preparación y condiciones antes de confirmar."
+                  title="Solicite una toma de muestras en casa"
+                  description="Comparta los datos iniciales y le ayudaremos a coordinar cobertura, fecha, horario y preparación."
                   align="left"
                 />
 
@@ -775,7 +807,7 @@ Entiendo que la visita queda pendiente de confirmación.`;
                   {[
                     "Indique los exámenes o envíe una foto legible de la orden por WhatsApp.",
                     "Comparta sector o ubicación y una fecha preferida.",
-                    "Espere la revisión y confirmación del equipo.",
+                    "Le confirmaremos los detalles por WhatsApp.",
                   ].map((step, index) => (
                     <li key={step} className="flex gap-4">
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-900 font-black text-white">
@@ -885,9 +917,9 @@ Entiendo que la visita queda pendiente de confirmación.`;
                       className="min-h-12 w-full rounded-xl border border-slate-300 bg-white px-4 outline-none focus:border-blue-700 focus:ring-4 focus:ring-blue-100"
                     >
                       <option value="">Por coordinar</option>
-                      <option>Mañana</option>
-                      <option>Mediodía</option>
-                      <option>Tarde</option>
+                      <option>En la mañana</option>
+                      <option>Al mediodía</option>
+                      <option>En la tarde</option>
                     </select>
                   </label>
                 </div>
@@ -919,7 +951,7 @@ Entiendo que la visita queda pendiente de confirmación.`;
                     role="status"
                     className="mt-5 rounded-xl bg-emerald-50 p-4 text-sm font-semibold text-emerald-900"
                   >
-                    Se abrió WhatsApp para continuar con la revisión.
+                    Se abrió WhatsApp para continuar con la coordinación.
                   </p>
                 )}
 
@@ -951,8 +983,8 @@ Entiendo que la visita queda pendiente de confirmación.`;
               </h2>
               <p className="mt-5 max-w-2xl text-lg leading-8 text-blue-100">
                 Cuéntenos el número de colaboradores, los exámenes requeridos,
-                la ubicación y la fecha tentativa. Prepararemos una respuesta
-                revisada, sin asumir perfiles ni condiciones.
+                la ubicación y la fecha tentativa. Le prepararemos una
+                cotización personalizada, sin asumir perfiles ni condiciones.
               </p>
 
               <ul className="mt-7 grid gap-4 sm:grid-cols-2">
@@ -990,7 +1022,7 @@ Entiendo que la visita queda pendiente de confirmación.`;
                   {
                     icon: CalendarDays,
                     title: "Coordinación",
-                    text: "Fecha y disponibilidad revisadas por el equipo.",
+                    text: "Fecha y disponibilidad coordinadas con usted.",
                   },
                   {
                     icon: ShieldCheck,
@@ -1256,36 +1288,30 @@ Entiendo que la visita queda pendiente de confirmación.`;
           </div>
 
           <div>
-            <h2 className="font-black">Canales oficiales</h2>
-            <div className="mt-4 flex gap-3">
-              {BUSINESS.social.facebook && (
-                <a
-                  href={BUSINESS.social.facebook}
-                  aria-label="Facebook de BioDiagnossis"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 hover:bg-white/20"
-                >
-                  <Facebook aria-hidden="true" />
-                </a>
-              )}
-              {BUSINESS.social.instagram && (
-                <a
-                  href={BUSINESS.social.instagram}
-                  aria-label="Instagram de BioDiagnossis"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 hover:bg-white/20"
-                >
-                  <Instagram aria-hidden="true" />
-                </a>
-              )}
+            <h2 className="font-black">Conéctese con nosotros</h2>
+            <p className="mt-3 text-sm leading-6 text-slate-300">
+              Síganos para conocer novedades, horarios e información del
+              laboratorio.
+            </p>
+            <div className="mt-4 grid gap-3">
+              <SocialLink
+                href={BUSINESS.social.facebook}
+                label="Facebook"
+                description="Novedades del laboratorio"
+                icon={Facebook}
+              />
+              <SocialLink
+                href={BUSINESS.social.instagram}
+                label="Instagram"
+                description="Información y novedades"
+                icon={Instagram}
+              />
               <WhatsAppLink
                 message={`Hola ${BUSINESS.name}, necesito información.`}
                 ariaLabel="WhatsApp de BioDiagnossis"
-                className="h-11 min-h-0 w-11 rounded-full bg-emerald-600 p-0"
+                className="min-h-0 rounded-2xl bg-emerald-600 px-4 py-3 text-white hover:bg-emerald-700"
               >
-                <span className="sr-only">WhatsApp</span>
+                Escríbanos por WhatsApp
               </WhatsAppLink>
             </div>
 
