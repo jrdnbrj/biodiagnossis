@@ -1,12 +1,15 @@
 FROM node:22-alpine AS build
 
 WORKDIR /app
-COPY package.json yarn.lock ./
-RUN corepack enable && yarn install --frozen-lockfile
+COPY package.json package-lock.json ./
+RUN npm ci
 COPY . .
-RUN yarn build
+
+ARG SITE_ENV=production
+ENV SITE_ENV=$SITE_ENV
+RUN npm run build
 
 FROM nginx:1.27-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/out /usr/share/nginx/html
 EXPOSE 80

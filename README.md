@@ -1,93 +1,67 @@
 # BioDiagnossis Web
 
-Sitio público de BioDiagnossis, laboratorio clínico en Quito. Es una aplicación React estática independiente del dashboard y de `jrdn-manager`.
+Sitio público estático de BioDiagnossis, laboratorio clínico en Quito. Está construido con Next.js App Router, TypeScript estricto y exportación estática; no comparte backend, autenticación ni datos sensibles con `jrdn-manager`.
 
-## Objetivo
+El sitio orienta a visitantes hacia WhatsApp para confirmar requisitos, disponibilidad y cotizaciones. No confirma una atención ni guarda solicitudes.
 
-Convertir consultas de pacientes en conversaciones por WhatsApp, visitas a sucursal o solicitudes de toma de muestras a domicilio. La página no confirma disponibilidad, atención clínica ni valores especiales automáticamente.
+## Rutas públicas
 
-## Estructura
+- `/`: inicio.
+- `/examenes/` y `/examenes/[slug]/`: catálogo y páginas de los exámenes activos.
+- `/atencion-domicilio-quito/`: formulario local que abre WhatsApp con una solicitud estructurada.
+- `/laboratorio-clinico-quito/`, `/laboratorio-clinico-el-inca/` y `/sucursal/`: información de ubicación y horarios.
+- `/examen-de-sangre/`, `/examen-de-orina/`, `/preparacion-examenes/` y `/salud-ocupacional-empresas/`: páginas de orientación.
+- `/preguntas-frecuentes/`, `/contacto/`, `/privacidad/` y `/terminos/`.
 
-```text
-src/
-  data/site.js            Datos comerciales, catálogo inicial y FAQs revisadas
-  lib/whatsapp.js         Enlaces y navegación de WhatsApp
-  services/public-site.js Capa opcional de API pública; usa datos locales sin API
-  styles/index.css        Entrada global de Tailwind
-  App.jsx                 Composición visual de la landing
-  main.jsx                Entrada React
-public/
-  robots.txt              Instrucciones de rastreo
-  sitemap.xml             Mapa del sitio
-Dockerfile                Imagen de producción con Nginx
-nginx.conf                Caché segura para HTML y assets versionados
-```
+Las páginas legales se marcan como `noindex` y muestran un aviso de revisión jurídica pendiente.
 
 ## Desarrollo local
 
-Requiere Node.js 20 o superior y Yarn mediante Corepack.
+Requiere Node.js 22 o superior y npm.
 
 ```bash
-corepack enable
-yarn install
-yarn dev
+npm install
+npm run dev
 ```
 
-Abra la URL que muestre Vite, normalmente `http://localhost:5173`.
+Abra [http://localhost:3000](http://localhost:3000).
 
-## Build de producción sin Docker
+## Validación y build
 
 ```bash
-yarn lint
-yarn build
+npm run lint
+npm run typecheck
+SITE_ENV=production npm run build
 ```
 
-El resultado queda en `dist/`. Puede publicarlo en un hosting estático, CDN o Nginx. Para un servidor propio, configure una regla de fallback a `index.html` para rutas de cliente.
+El resultado queda en `out/`, con URLs de barra final y HTML prerenderizado. Puede publicarse detrás de Nginx o un CDN que sirva archivos estáticos.
 
-## Build de producción con Docker
+## Docker
 
 ```bash
-docker build -t biodiagnossis-web .
+docker build --build-arg SITE_ENV=production -t biodiagnossis-web .
 docker run -d --name biodiagnossis-web -p 8080:80 biodiagnossis-web
 ```
 
-Luego estará disponible en `http://localhost:8080`. En producción, sitúe el contenedor detrás de un proxy HTTPS y apunte el dominio a ese proxy.
+El sitio quedará disponible en [http://localhost:8080](http://localhost:8080). Nginx sirve rutas como `/examenes/` y `/examenes/biometria/` desde el export estático, sin fallback de SPA.
 
-## Configuración
+## Configuración y SEO
 
-Copie `.env.example` a `.env.local` solo si tendrá una API pública:
+El dominio canónico está definido como `https://www.biodiagnossis.com/`. Copie `.env.example` a `.env.local` solo si desea controlar el comportamiento del build:
 
 ```bash
 cp .env.example .env.local
 ```
 
-- `VITE_PUBLIC_API_URL`: base URL de una API pública que exponga catálogo y solicitudes. Si queda vacía, se usa el contenido local revisado en `src/data/site.js`.
-- `VITE_SITE_URL`: referencia para el build; manténgala alineada con el dominio canónico.
+- `SITE_ENV=production`: permite el rastreo en `robots.txt` durante el build.
+- Cualquier valor distinto de `production`: genera un `robots.txt` con `Disallow: /`, útil para previews.
 
-Nunca incluya secretos, claves de Evolution API, JWT ni credenciales administrativas en variables `VITE_*`: estas variables llegan al navegador.
+`sitemap.xml`, `robots.txt`, metadatos, canonicales, Open Graph y JSON-LD se generan durante el build. Antes de lanzar el sitio, revise los datos en `src/data/` y complete únicamente activos verificados, por ejemplo logo, imagen Open Graph, coordenadas o textos legales finales. No se deben inventar esos datos.
 
-## Integración futura con API
+## Datos y límites
 
-La capa `src/services/public-site.js` espera opcionalmente:
+- `src/data/business.ts`: datos de contacto, horarios, redes y navegación.
+- `src/data/services.ts`: catálogo de exámenes y precios estimados.
+- `src/data/faqs.ts`: preguntas frecuentes.
 
-- `GET /public/site`: catálogo activo y preguntas frecuentes públicas.
-- `POST /public/home-service-requests`: una solicitud inicial de domicilio.
-
-La API debe validar, limitar tráfico, aplicar CORS al dominio del sitio y no devolver información clínica sensible. WhatsApp debe seguir siendo la confirmación de disponibilidad.
-
-## SEO y lanzamiento
-
-Antes de indexar la web:
-
-1. Revise `src/data/site.js`: nombre legal, teléfono, correo, dirección, horarios, mapa, cobertura, redes, precios y preparación.
-2. Mantenga el mismo dominio en `index.html`, `public/sitemap.xml`, `public/robots.txt` y `VITE_SITE_URL`.
-3. Añada un logo real en `public/` y una imagen social Open Graph antes de compartir enlaces.
-4. Cree y publique páginas legales reales de privacidad y tratamiento de datos; un laboratorio no debe publicar una política genérica sin revisión legal.
-5. Verifique que el sitio responda con HTTPS, que `www` y la raíz redirijan a una única URL canónica y que las URLs no devuelvan contenido duplicado.
-6. Registre el dominio en Google Search Console y envíe `https://www.biodiagnossis.com/sitemap.xml`.
-7. Mantenga actualizado el perfil de Google Business Profile con la misma dirección, teléfono, horario y sitio web.
-8. Publique contenido útil y verificable: preparación de exámenes, horarios, atención a domicilio y preguntas frecuentes. No cree páginas repetitivas para ciudades o barrios sin información real.
-
-## Datos clínicos y privacidad
-
-El sitio debe orientar, no diagnosticar. No publique resultados ni solicite información clínica innecesaria en formularios. La solicitud de domicilio debe recopilar únicamente datos mínimos y dirigir la confirmación al equipo humano por WhatsApp.
+Los precios publicados son estimaciones. La cotización final, la preparación y la disponibilidad deben confirmarse por WhatsApp. No publique resultados, diagnósticos ni datos clínicos sensibles en el sitio.
