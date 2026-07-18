@@ -16,10 +16,10 @@ export function Breadcrumbs({ items }: { items: ReadonlyArray<{ name: string; pa
   return <nav className="breadcrumbs" aria-label="Ruta de navegación">{items.map((item, index) => <span key={item.path}>{index > 0 && <span aria-hidden="true">/</span>}{index === items.length - 1 ? <span aria-current="page">{item.name}</span> : <Link href={item.path}>{item.name}</Link>}</span>)}</nav>;
 }
 
-export function SectionHeading({ eyebrow, title, children }: { eyebrow?: string; title: string; children?: ReactNode }) {
-  return <div className="section-heading">{eyebrow && <p className="eyebrow">{eyebrow}</p>}<h2>{title}</h2>{children && <p>{children}</p>}</div>;
+export function SectionHeading({ eyebrow, title, children, align = 'center' }: { eyebrow?: string; title: string; children?: ReactNode; align?: 'center' | 'left' }) {
+  return <div className={`section-heading section-heading-${align}`}>{eyebrow && <p className="eyebrow">{eyebrow}</p>}<h2>{title}</h2>{children && <p>{children}</p>}</div>;
 }
 
 export function BranchDetails() {
-  return <div className="branch-card"><div><p className="eyebrow">Sucursal</p><h2>Laboratorio clínico en El Inca</h2><p>{BUSINESS.address}</p><a className="text-link" href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer">Abrir ubicación en Google Maps</a></div><dl>{BUSINESS.hours.map((item) => <div key={item.days}><dt>{item.days}</dt><dd>{item.value}</dd></div>)}</dl></div>;
+  return <div className="branch-card original-branch-card"><div className="branch-details"><p className="eyebrow">Sucursal</p><h2>Visítenos en el sector El Inca</h2><div className="branch-detail"><strong>Dirección</strong><span>{BUSINESS.address}</span></div><div className="branch-detail"><strong>Horarios</strong>{BUSINESS.hours.map((item) => <span key={item.days}><b>{item.days}:</b> {item.value}</span>)}</div><div className="branch-detail"><strong>Contacto</strong><a href={`tel:+${BUSINESS.phoneE164}`}>{BUSINESS.phoneDisplay}</a></div><div className="inline-actions"><a className="button primary-action" href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer">Cómo llegar</a><WhatsAppLink message="Hola, quisiera confirmar información antes de acudir a la sucursal." className="button button-secondary">Confirmar antes de ir</WhatsAppLink></div></div><iframe title="Ubicación de BioDiagnossis" loading="lazy" referrerPolicy="no-referrer-when-downgrade" src={`https://www.google.com/maps?q=${encodeURIComponent(BUSINESS.address)}&output=embed`} /></div>;
 }
