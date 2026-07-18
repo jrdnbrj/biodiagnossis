@@ -6,6 +6,7 @@ import { SiteHeader } from '@/components/site-header';
 import { BUSINESS, SITE_URL } from '@/data/business';
 import { businessSchema } from '@/lib/schema';
 import { JsonLd } from '@/components/ui';
+import { SitePreferences } from '@/components/site-preferences';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
@@ -22,5 +23,5 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, themeColor: '#0b5d88' };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="es-EC"><body className={inter.className}><JsonLd data={businessSchema} /><SiteHeader /><main>{children}</main><SiteFooter /></body></html>;
+  return <html lang="es-EC" suppressHydrationWarning><body className={inter.className}><JsonLd data={businessSchema} /><SiteHeader /><main>{children}</main><SiteFooter /><SitePreferences /></body></html>;
 }
