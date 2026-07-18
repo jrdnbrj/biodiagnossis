@@ -1,0 +1,9 @@
+{
+  "name": "BioDiagnossis",
+  "short_name": "BioDiagnossis",
+  "lang": "es-EC",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#ffffff",
+  "theme_color": "#17357A"
+}
