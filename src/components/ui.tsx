@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { MessageCircle } from 'lucide-react';
+import { Clock3, MapPin, MessageCircle, Navigation, Phone } from 'lucide-react';
 import { BUSINESS } from '@/data/business';
 import { whatsappUrl } from '@/lib/whatsapp';
 
@@ -21,5 +21,5 @@ export function SectionHeading({ eyebrow, title, children, align = 'center' }: {
 }
 
 export function BranchDetails() {
-  return <div className="branch-card original-branch-card"><div className="branch-details"><p className="eyebrow">Sucursal</p><h2>Visítenos en el sector El Inca</h2><div className="branch-detail"><strong>Dirección</strong><span>{BUSINESS.address}</span></div><div className="branch-detail"><strong>Horarios</strong>{BUSINESS.hours.map((item) => <span key={item.days}><b>{item.days}:</b> {item.value}</span>)}</div><div className="branch-detail"><strong>Contacto</strong><a href={`tel:+${BUSINESS.phoneE164}`}>{BUSINESS.phoneDisplay}</a></div><div className="inline-actions"><a className="button primary-action" href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer">Cómo llegar</a><WhatsAppLink message="Hola, quisiera confirmar información antes de acudir a la sucursal." className="button button-secondary">Confirmar antes de ir</WhatsAppLink></div></div><iframe title="Ubicación de BioDiagnossis" loading="lazy" referrerPolicy="no-referrer-when-downgrade" src={`https://www.google.com/maps?q=${encodeURIComponent(BUSINESS.address)}&output=embed`} /></div>;
+  return <div className="branch-card original-branch-card"><div className="branch-details"><p className="branch-name">BioDiagnossis</p><div className="branch-detail"><MapPin aria-hidden="true" /><div><strong>Dirección</strong><span>{BUSINESS.address}</span></div></div><div className="branch-detail"><Clock3 aria-hidden="true" /><div><strong>Horarios</strong>{BUSINESS.hours.map((item) => <span key={item.days}><b>{item.days}:</b> {item.value}</span>)}</div></div><div className="branch-detail"><Phone aria-hidden="true" /><div><strong>Contacto</strong><a href={`tel:+${BUSINESS.phoneE164}`}>{BUSINESS.phoneDisplay}</a></div></div><div className="inline-actions"><a className="button primary-action" href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer"><Navigation size={18} aria-hidden="true" />Cómo llegar</a><WhatsAppLink message="Hola, quisiera confirmar información antes de acudir a la sucursal." className="button button-secondary">Confirmar antes de ir</WhatsAppLink></div></div><iframe title="Ubicación de BioDiagnossis" loading="lazy" referrerPolicy="no-referrer-when-downgrade" src={`https://www.google.com/maps?q=${encodeURIComponent(BUSINESS.address)}&output=embed`} /></div>;
 }
